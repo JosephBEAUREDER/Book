@@ -1,7 +1,6 @@
 const cardContainer = document.getElementById("card-container");
 const addCardBtn = document.getElementById("add-card-btn");
 const removeCardBtn = document.getElementById("remove-card-btn");
-const keyInput = document.getElementById("key-input"); // Text input for user to specify key
 const loadKeyBtn = document.getElementById("load-key-btn"); // Button to load user-specified key
 
 let jsonData = {}; // Store the entire JSON data
@@ -13,8 +12,10 @@ let currentKey = "1"; // Default to section "1"
 
 // Function to update the JSON key display
 function updateJsonKeyDisplay(key) {
-  const jsonKeyDisplay = document.getElementById("json-key-display");
-  jsonKeyDisplay.textContent = `Section: ${key}`;
+    const jsonKeyDisplay = document.getElementById("json-key-display");
+    jsonKeyDisplay.textContent = `Item: ${key}`;
+  const keyInput = document.getElementById("key-input");
+  keyInput.placeholder = `${key}`; // Set the placeholder to the new key value
 }
 
 // Update the display when the page loads
@@ -127,19 +128,69 @@ function resetCards() {
   removedCards = [];
 }
 
-// Load a user-specified key when the "Load Key" button is clicked
-loadKeyBtn.addEventListener("click", () => {
-  const userKey = keyInput.value.trim();
-  if (jsonData[userKey]) {
-    currentKey = userKey;
-    loadCardData(currentKey);
-    resetCards(); // Reset cards before loading the new key
-    // Automatically add the first card of the specified section
-    if (cardData.length > 0) {
-      const [title, text] = cardData.shift();
-      createCard(title, text);
+
+const keyInput = document.getElementById("key-input"); // Text input for user to specify key
+
+// Load a user-specified key when the Enter key is pressed
+keyInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") { // Check if the pressed key is "Enter"
+    const userKey = keyInput.value.trim();
+    if (jsonData[userKey]) {
+      currentKey = userKey;
+      loadCardData(currentKey);
+      resetCards(); // Reset cards before loading the new key
+      // Automatically add the first card of the specified section
+      if (cardData.length > 0) {
+        const [title, text] = cardData.shift();
+        createCard(title, text);
+      }
+    } else {
+      alert("Invalid key! Please enter a valid key.");
     }
-  } else {
-    alert("Invalid key! Please enter a valid key.");
   }
 });
+
+
+
+
+//////////////// SWIPE GESTURE ////////////////
+
+let touchStartX = 0; // Store the starting X position of the touch/mouse
+let touchEndX = 0; // Store the ending X position of the touch/mouse
+
+// Touch Events
+document.body.addEventListener('touchstart', (event) => {
+  touchStartX = event.changedTouches[0].screenX; // Get the X coordinate when the touch starts
+});
+
+document.body.addEventListener('touchend', (event) => {
+  touchEndX = event.changedTouches[0].screenX; // Get the X coordinate when the touch ends
+  handleSwipeGesture(); // Handle the swipe action based on the coordinates
+});
+
+// Mouse Events for Swipe Simulation
+document.body.addEventListener('mousedown', (event) => {
+  touchStartX = event.screenX; // Get the X coordinate when mouse click starts
+});
+
+document.body.addEventListener('mouseup', (event) => {
+  touchEndX = event.screenX; // Get the X coordinate when mouse click ends
+  handleSwipeGesture(); // Handle the swipe action based on the coordinates
+});
+
+// Function to determine swipe direction and take action
+function handleSwipeGesture() {
+  const swipeThreshold = 50; // Minimum distance to be considered a swipe
+
+  if (touchEndX < touchStartX - swipeThreshold) {
+    // Swipe Left Detected
+    console.log('Swiped Left');
+    // Add your action here for swipe left (e.g., navigate to the previous card)
+  }
+
+  if (touchEndX > touchStartX + swipeThreshold) {
+    // Swipe Right Detected
+    console.log('Swiped Right');
+    // Add your action here for swipe right (e.g., navigate to the next card)
+  }
+}
