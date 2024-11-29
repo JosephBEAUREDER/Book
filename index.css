@@ -1,73 +1,83 @@
+/* General body with dark grey background */
 body {
-    background-color: #f8f9fa; /* Light grey for body background */
+    background-color: #2b2b2b; /* Dark grey for body background */
+    color: #f0f0f0; /* Light grey text for better readability */
 }
 
+/* Header with darker grey and shiny appearance */
 .header-container {
-    background-color: #6c757d; /* Cool grey background for header */
+    background-color: #3a3a3a; /* Dark grey background for header */
     padding: 20px 15px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    color: #fff; /* White text */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Stronger shadow for more depth */
+    color: #ffffff; /* White text */
+    border-bottom: 2px solid #474747; /* Subtle shine at the bottom */
 }
 
+/* Styling header text to make it stand out */
 .header h1 {
     margin: 0;
-    font-size: 26px; /* Slightly larger text for a more striking look */
+    font-size: auto; /* Slightly larger text for emphasis */
     font-weight: bold;
     text-transform: uppercase; /* Make the text uppercase for a modern feel */
-    letter-spacing: 1px; /* Add some spacing between letters */
+    letter-spacing: 1.5px; /* Increased letter spacing */
+    color: #c7c7c7; /* Lighter grey to provide a contrast with header background */
 }
 
-
-
-
-
-
-
-
-
+/* Card container adjustments */
 .card-container {
     position: relative; /* Establish stacking context for the cards */
-  }
-  
-  .card {
+}
+
+/* Individual card styling */
+.card {
     margin-top: 0; /* Prevent automatic spacing */
     z-index: auto; /* Cards will stack based on their DOM order */
     position: absolute; /* Allow cards to overlap */
     top: 0;
     left: 0;
     width: 100%; /* Full width inside the container */
-  }
-  
-  .card-body {
+    background-color: #3c3c3c; /* Dark grey for cards */
+    border: 1px solid #4a4a4a; /* Slight shine on card edges */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Slight shadow for card */
+    color: #f0f0f0; /* Light text for readability */
+}
+
+/* Styling for card body */
+.card-body {
     margin-top: 15px; /* Adjust vertical overlap */
-  }
-  
-  #add-card-btn {
+    padding: 15px; /* Add padding for spacing */
+}
+
+/* "Add card" button with a shiny look */
+#add-card-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    padding: 15px 20px;
-  } 
-  
-  /* #add-card-btn:active {
-    transform: scale(0.95);
-  } */
-  
-  #remove-card-btn {
+    padding: 20px 45px;
+    background-color: #727272; /* Bootstrap info color */
+    color: #ffffff;
+    border: none;
+    border-radius: 10px; /* Rounded edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Add shine shadow */
+}
+
+/* "Remove card" button with dark/red */
+#remove-card-btn {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    padding: 10px 15px;
-    background-color: #dc3545;
-    color: #fff;
+    padding: 20px 45px;
+    background-color: #616161; /* Bootstrap danger color */
+    color: #ffffff;
     border: none;
-    border-radius: 50%;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  #remove-card-btn:active {
+    border-radius: 10px; /* Rounded edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Add shine shadow */
+}
+
+/* Button click effect for both buttons */
+#add-card-btn:active,
+#remove-card-btn:active {
     transform: scale(0.95);
-  }
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* Reduce shadow for a click effect */
+}

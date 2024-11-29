@@ -2,11 +2,51 @@
     "1": {
       "Text of the first card": "This is the content of the first card.",
       "Text of the second card": "This is the content of the second card.",
-      "Text of the third card": "This is the content of the third card."
+      "Text of the third card": "This is the content of the third card.",
+      "Text of the fourth card": "This is the content of the fourth card in section 1.",
+      "Text of the fifth card": "Additional information for the fifth card in section 1."
     },
     "2": {
       "Text of another card": "Content for another card in section 2.",
-      "Text of yet another card": "More content for section 2."
+      "Text of yet another card": "More content for section 2.",
+      "Text of card three in section 2": "Here is some more detailed content for section 2, card three.",
+      "Text of card four in section 2": "Content for section 2, card four with some extra details.",
+      "Summary card in section 2": "A summary of the topics covered in section 2."
+    },
+    "3": {
+      "Introduction card": "This is an introduction to section 3.",
+      "Key points card": "A card listing key points for section 3.",
+      "Detailed explanation card": "A more detailed explanation about an important topic in section 3.",
+      "Use cases card": "Different use cases relevant to section 3 are listed here.",
+      "Conclusion card": "The conclusion for section 3 summarizing all major points discussed."
+    },
+    "4": {
+      "First card of section 4": "Introduction content for section 4.",
+      "Second card of section 4": "A continuation of section 4 discussion.",
+      "Third card with more info": "More information on a topic in section 4.",
+      "Fourth card for section 4": "Further exploration of content for section 4.",
+      "Final notes card": "Final notes wrapping up section 4."
+    },
+    "5": {
+      "Overview card": "This card provides an overview of section 5.",
+      "Background card": "Background information for the main topic of section 5.",
+      "Analysis card": "An analysis of key concepts in section 5.",
+      "Summary of section 5": "A summary providing quick insights into the major points discussed in section 5.",
+      "Final remarks card": "Some closing thoughts for section 5."
+    },
+    "6": {
+      "Introduction to section 6": "Introducing the core ideas of section 6.",
+      "Case study card": "Details of a relevant case study for section 6.",
+      "Insights card": "Insights and takeaways for section 6 topics.",
+      "Discussion points card": "Points to be discussed further in section 6.",
+      "Conclusion for section 6": "Concluding the ideas presented in section 6."
+    },
+    "7": {
+      "First card of section 7": "This is the first card in section 7, giving an overview.",
+      "Second card: Advanced Topic": "Content related to an advanced topic in section 7.",
+      "Third card with examples": "Examples provided for better understanding of section 7.",
+      "Fourth card: Real-life application": "How the concepts in section 7 apply in real life.",
+      "Wrap-up card": "A wrap-up to summarize section 7."
     }
   }
   
