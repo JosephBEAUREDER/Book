@@ -1,0 +1,12 @@
+{
+    "1": {
+      "Text of the first card": "This is the content of the first card.",
+      "Text of the second card": "This is the content of the second card.",
+      "Text of the third card": "This is the content of the third card."
+    },
+    "2": {
+      "Text of another card": "Content for another card in section 2.",
+      "Text of yet another card": "More content for section 2."
+    }
+  }
+  
