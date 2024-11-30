@@ -9,17 +9,39 @@ let removedCards = []; // Array to store removed cards
 let cardCount = 0; // Keep track of how many cards have been added
 
 let currentKey = "1"; // Default to section "1"
+let currentKeyIndex = 0; // Track the current key index
+let keys = []; // Keys of the JSON data
 
-// Function to update the JSON key display
-function updateJsonKeyDisplay(key) {
-    const jsonKeyDisplay = document.getElementById("json-key-display");
-    jsonKeyDisplay.textContent = `Item: ${key}`;
-  const keyInput = document.getElementById("key-input");
-  keyInput.placeholder = `${key}`; // Set the placeholder to the new key value
+
+// Function to create a card
+function createCard(text) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.textContent = text;
+  cardContainer.appendChild(card);
+  cardCount++;
 }
 
-// Update the display when the page loads
-updateJsonKeyDisplay(currentKey);
+// Function to load data for a specific key
+function loadCardData(key) {
+  if (jsonData[key]) {
+    const keyData = jsonData[key];
+    console.log(key);
+    const content = keyData["Content"];
+    cardData = [...content]; // Copy the content into cardData
+    resetCards(); // Reset the card display
+    if (cardData.length > 0) {
+      const text = cardData.shift();
+      createCard(text);
+    }
+    updateInsightTitle(keyData); // Pass the key object to update the display
+    updateInputSection(key); // Pass the key object to update the input field
+  } else {
+    alert("No more sections to display!");
+  }
+}
+
+
 
 // Fetch JSON and prepare card data
 fetch("insights.json")
@@ -28,57 +50,8 @@ fetch("insights.json")
     jsonData = data; // Store the entire JSON object
 
     // Get the keys sorted to ensure consistent order
-    const keys = Object.keys(jsonData).sort((a, b) => parseInt(a) - parseInt(b));
-    let currentKeyIndex = 0; // Track the current key index
-    let cardData = []; // Holds content for the current key
-
-    // Function to load data for a specific key
-    function loadCardData(key) {
-      if (jsonData[key]) {
-        const content = jsonData[key]["Content"];
-        cardData = [...content]; // Copy the content into cardData
-        resetCards(); // Reset the card display
-        if (cardData.length > 0) {
-          const text = cardData.shift();
-          createCard(text);
-        }
-        updateJsonKeyDisplay(key); // Update the display (e.g., UI element showing current key)
-      } else {
-        alert("No more sections to display!");
-      }
-    }
-
-    // Function to reset all cards
-    function resetCards() {
-      while (cardContainer.firstChild) {
-        cardContainer.removeChild(cardContainer.firstChild);
-      }
-      cardCount = 0;
-      removedCards = [];
-    }
-
-    // Add a card dynamically when the "+" button is clicked
-    addCardBtn.addEventListener("click", () => {
-      if (removedCards.length > 0) {
-        // Reuse a removed card if available
-        const text = removedCards.pop();
-        createCard(text);
-      } else if (cardData.length > 0) {
-        // Otherwise, use the next card from the remaining data
-        const text = cardData.shift();
-        createCard(text);
-      } else {
-        // Move to the next key when no more cards in the current key
-        currentKeyIndex++;
-        if (currentKeyIndex < keys.length) {
-          const nextKey = keys[currentKeyIndex];
-          loadCardData(nextKey);
-        } else {
-          alert("No more cards to display!");
-          resetCards(); // Ensure cards are cleared when everything is done
-        }
-      }
-    });
+    keys = Object.keys(jsonData).sort((a, b) => parseInt(a) - parseInt(b));
+    currentKeyIndex = 0; // Track the current key index
 
     // Load the first key initially
     if (keys.length > 0) {
@@ -87,6 +60,33 @@ fetch("insights.json")
   })
   .catch((error) => console.error("Error loading JSON:", error));
 
+
+
+  // Add a card dynamically when the "+" button is clicked
+addCardBtn.addEventListener("click", () => {
+  if (removedCards.length > 0) {
+    // Reuse a removed card if available
+    const text = removedCards.pop();
+    createCard(text);
+  } else if (cardData.length > 0) {
+    // Otherwise, use the next card from the remaining data
+    const text = cardData.shift();
+    createCard(text);
+  } else {
+    // Move to the next key when no more cards in the current key
+    currentKeyIndex++;
+    if (currentKeyIndex < keys.length) {
+      const nextKey = keys[currentKeyIndex];
+      loadCardData(nextKey);
+    } else {
+      alert("No more cards to display!");
+      resetCards(); // Ensure cards are cleared when everything is done
+    }
+  }
+});
+
+
+
 // Remove the last card when the "-" button is clicked
 removeCardBtn.addEventListener("click", () => {
   const cards = cardContainer.getElementsByClassName("card");
@@ -94,42 +94,23 @@ removeCardBtn.addEventListener("click", () => {
   if (cards.length > 0) {
     // Remove the last card if there are cards in the container
     const lastCard = cards[cards.length - 1]; // Get the last card
-    const text = lastCard.querySelector(".card-text").textContent; // Get the text content only
+    const text = lastCard.textContent; // Get the text content only
 
     removedCards.push(text); // Save the removed card's text
     lastCard.remove(); // Remove the last card
     cardCount--; // Decrement the card count
-  } else {
-    // No cards left, go to the previous section if possible
-    if (currentKeyIndex > 0) {
+
+    if (cardCount === 0 && currentKeyIndex > 0) {
+      // No cards left, move to the previous key if available
       currentKeyIndex--; // Decrement the current key index
       const previousKey = keys[currentKeyIndex]; // Get the previous key
-      resetCards(); // Clear current cards
       loadCardData(previousKey); // Load cards for the previous key
-
-      // Add all cards from the previous section
-      cardData.forEach((text) => {
-        createCard(text);
-      });
-    } else {
-      alert("No cards to remove!");
     }
+  } else {
+    alert("No cards to remove!");
   }
 });
 
-// Load card data for a specific key using a for loop
-function loadCardData(key) {
-  if (jsonData[key]) {
-    cardData = [];
-    const content = jsonData[key]["Content"]; // Extract the content array
-    for (let text of content) {
-      cardData.push(text); // Add only the text to cardData
-    }
-    updateJsonKeyDisplay(key); // Update the display
-  } else {
-    alert("No more sections to display!");
-  }
-}
 
 // Reset all cards
 function resetCards() {
@@ -163,16 +144,6 @@ function createCard(text) {
   cardCount++; // Increment card count for stacking
 }
 
-// Function to reset all cards
-function resetCards() {
-  // Remove all cards from the container
-  while (cardContainer.firstChild) {
-    cardContainer.removeChild(cardContainer.firstChild);
-  }
-  // Reset card count but DO NOT clear removedCards globally
-  cardCount = 0;
-}
-
 
 
 const keyInput = document.getElementById("key-input"); // Text input for user to specify key
@@ -183,17 +154,22 @@ keyInput.addEventListener("keydown", (event) => {
     const userKey = keyInput.value.trim();
     if (jsonData[userKey]) {
       currentKey = userKey;
-      loadCardData(currentKey);
-      resetCards(); // Reset cards before loading the new key
-      // Automatically add the first card of the specified section
-      if (cardData.length > 0) {
-        const [title, text] = cardData.shift();
-        createCard(title, text);
-      }
+      currentKeyIndex = keys.indexOf(userKey); // Update the current key index to match the user-specified key
+      loadCardData(currentKey); // Load cards for the specified key
     } else {
       alert("Invalid key! Please enter a valid key.");
     }
   }
 });
 
+// Function to update the JSON key display
+function updateInsightTitle(keyData) {
+  const InsightTitle = document.getElementById("json-key-display");
+  const titleAndAuthor = keyData["Title and author"];
+  InsightTitle.textContent = titleAndAuthor;
+}
 
+function updateInputSection(key) {
+  const keyInput = document.getElementById("key-input");
+  keyInput.placeholder = key; // Set the placeholder to the Title and Author
+}
