@@ -35,7 +35,7 @@ function loadCardData(key) {
       createCard(text);
     }
     updateInsightTitle(keyData); // Pass the key object to update the display
-    updateInputSection(key); // Pass the key object to update the input field
+    // updateInputSection(key); // Pass the key object to update the input field
   } else {
     alert("No more sections to display!");
   }
@@ -146,7 +146,7 @@ function createCard(text) {
 
 
 
-const keyInput = document.getElementById("key-input"); // Text input for user to specify key
+const keyInput = document.getElementById("scroll-picker"); // Text input for user to specify key
 
 // Load a user-specified key when the Enter key is pressed
 keyInput.addEventListener("keydown", (event) => {
@@ -169,7 +169,54 @@ function updateInsightTitle(keyData) {
   InsightTitle.textContent = titleAndAuthor;
 }
 
-function updateInputSection(key) {
-  const keyInput = document.getElementById("key-input");
-  keyInput.placeholder = key; // Set the placeholder to the Title and Author
-}
+// function updateInputSection(key) {
+//   const keyInput = document.getElementById("scroll-picker");
+//   keyInput.placeholder = key; // Set the placeholder to the Title and Author
+// }
+
+
+
+
+
+
+///////////// SCROLL-PICKER //////////////
+
+document.addEventListener("DOMContentLoaded", function () {
+  const scrollPicker = document.getElementById("scroll-picker");
+  const ul = scrollPicker.querySelector("ul");
+  let selectedValue = 1; // Default value
+
+  // Clear existing list (if needed)
+  ul.innerHTML = "";
+
+  // Generate options dynamically (1 to 20)
+  for (let i = 1; i <= 20; i++) {
+      const li = document.createElement("li");
+      li.textContent = i;
+      li.addEventListener("click", function () {
+          selectedValue = i; // Update the selected value
+          scrollPicker.setAttribute("data-selected", i); // Store the selected value
+          scrollPicker.classList.remove("expanded"); // Collapse the picker
+      });
+      ul.appendChild(li);
+  }
+
+  // Set default value
+  scrollPicker.setAttribute("data-selected", selectedValue);
+
+  // Expand the picker on click
+  scrollPicker.addEventListener("click", function () {
+      if (scrollPicker.classList.contains("expanded")) {
+          scrollPicker.classList.remove("expanded"); // Collapse if already expanded
+      } else {
+          scrollPicker.classList.add("expanded"); // Expand if not expanded
+      }
+  });
+
+  // Collapse the picker when clicking outside
+  document.addEventListener("click", function (event) {
+      if (!scrollPicker.contains(event.target)) {
+          scrollPicker.classList.remove("expanded");
+      }
+  });
+});

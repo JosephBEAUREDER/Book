@@ -49,30 +49,42 @@ body {
     padding: 15px; /* Add padding for spacing */
 }
 
-/* "Add card" button with a shiny look */
-#add-card-btn {
+/* Common styling for fixed bottom section */
+.fixed-bottom {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 20px 45px;
-    background-color: #727272; /* Bootstrap info color */
-    color: #ffffff;
-    border: none;
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Add shine shadow */
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Align items vertically */
+    padding: 0 20px;
 }
 
-/* "Remove card" button with dark/red */
+/* Input styling */
+#key-input {
+    width: 70px; /* Fixed width for better alignment */
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust button styles to fit with the layout */
+#add-card-btn, #remove-card-btn {
+    padding: 18px 40px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#add-card-btn {
+    background-color: #727272; /* Bootstrap info color */
+    color: #ffffff;
+}
+
 #remove-card-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    padding: 20px 45px;
     background-color: #616161; /* Bootstrap danger color */
     color: #ffffff;
-    border: none;
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Add shine shadow */
 }
 
 /* Button click effect for both buttons */
@@ -80,4 +92,72 @@ body {
 #remove-card-btn:active {
     transform: scale(0.95);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* Reduce shadow for a click effect */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Scroll Picker Styling */
+.scroll-picker {
+    position: relative;
+    width: 100px;
+    height: 40px; /* Default height to show one number */
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: hidden; /* Hide overflow by default */
+    transition: height 0.3s ease; /* Smooth transition when expanding */
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+/* Expanded scroll picker */
+.scroll-picker.expanded {
+    height: 200px; /* Expand height to show multiple options */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* Options inside the picker */
+.scroll-picker ul {
+    list-style: none;
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    width: 100%; /* Fit within the picker */
+    position: relative; /* Ensure list scrolls correctly */
+}
+
+.scroll-picker ul li {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+    box-sizing: border-box; /* Ensure padding is included in height */
+}
+
+.scroll-picker ul li:last-child {
+    border-bottom: none;
+}
+
+.scroll-picker ul li:hover {
+    background: #f7f7f7;
+    color: #000;
+}
+
+.parent-container {
+    overflow: visible !important;
 }
