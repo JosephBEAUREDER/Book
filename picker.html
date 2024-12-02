@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+    <title>iOS Style Wheel Picker For Mobile Example</title>
+    <link href="https://www.cssscript.com/demo/sticky.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+    #cover {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        visibility: hidden;
+        opacity: 0;
+        transition: .6s
+    }
+
+    #cover.show {
+        visibility: visible;
+        opacity: .5
+    }
+
+    #cover.show,
+    #picker {
+        transition: .5s
+    }
+
+    #picker {
+        background-color: #fff;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        -webkit-transform: translateY(100%);
+        transform: translateY(100%)
+    }
+
+    #picker.show {
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+
+    .picker-header {
+        position: relative;
+        background-color: #f2f2f4;
+        height: 40px;
+        line-height: 40px;
+        z-index: 3;
+        color: #007af0;
+        font-size: 17px;
+    }
+
+    .picker-header .cancel {
+        position: absolute;
+        top: 0;
+        left: 15px;
+    }
+
+    .picker-header .confirm {
+        position: absolute;
+        top: 0;
+        right: 15px;
+    }
+
+    .picker-items {
+        position: relative;
+        height: 216px;
+        overflow: hidden
+    }
+
+    .picker-items-col {
+        float: left;
+        width: 25%;
+        height: 100%;
+        position: relative;
+        z-index: 10;
+    }
+
+    .picker-item {
+        height: 36px;
+        line-height: 36px;
+        box-sizing: border-box;
+        left: 0;
+        color: #000;
+        width: 100%;
+        text-align: center;
+        z-index: 1
+    }
+
+    .picker-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        z-index: 10;
+        /*!* autoprefixer: off *!*/
+        background: -webkit-linear-gradient(top, #fff, hsla(0, 0%, 100%, .7));
+        background: linear-gradient(top, #fff, hsla(0, 0%, 100%, .7));
+        border-bottom: 1px solid #ddd;
+        pointer-events: none
+    }
+
+    .picker-line-bottom {
+        top: auto;
+        bottom: 0;
+        border-top: 1px solid #ddd;
+        border-bottom: none;
+        /*!* autoprefixer: off *!*/
+        background: -webkit-linear-gradient(bottom, #fff, hsla(0, 0%, 100%, .7));
+        background: linear-gradient(bottom, #fff, hsla(0, 0%, 100%, .7))
+    }
+    </style>
+</head>
+
+<body>
+    
+    <div class="start-date"></div>
+    <button id="openPicker">Open The Picker</button>
+</body>
+<script src="./picker.js"></script>
+<script>
+(function() {
+    function getNextDay (y, m, d) {
+        let _date = new Date(+y, +m -1, +d + 1);
+        return [_date.getFullYear(), _date.getMonth() + 1, _date.getDate()]
+    }
+
+    function getDateList () {
+        var cur = new Date(),
+            year =  cur.getFullYear(),
+            month = (cur.getMonth() + 1) > 9 ? (cur.getMonth() + 1) : '0' + (cur.getMonth() +1),
+            day = cur.getDate() > 9 ? cur.getDate() : 0 + cur.getDate();
+            nextDay = getNextDay(year, month, day),
+            monthArr = [],
+            dayArr = [];
+
+        for (var i = 1; i <= 12; i++) {
+            monthArr.push({
+                title: i,
+                value: i
+            });
+        }
+
+        for (var i = 1; i <=new Date(nextDay[0], nextDay[1], 0).getDate(); i++) {
+            dayArr.push({
+                title: i,
+                value: i
+            });
+        }
+
+        var dateList = [
+            [
+                {
+                    title: (+nextDay[0] -1),
+                    value: (+nextDay[0] -1)
+                },
+                {
+                    title: (+nextDay[0]),
+                    value: (+nextDay[0])
+                },
+                {
+                    title: (+nextDay[0] +1),
+                    value: (+nextDay[0] +1)
+                },
+            ],
+            monthArr,
+            dayArr
+        ]
+
+        return dateList;
+    }
+
+    var dateList = getDateList(), selectYear, selectMonth, selectDay, selectedYearS, selectedMonthS, selectedDayS;
+
+    var $picker = new Picker({
+        el: '.start-date',
+        autoHide: true,
+        itemHeight: 36,
+        data: dateList,
+        onChange: res => {
+            // console.log(res);
+            switch (res.index) {
+                case 0:
+                    console.log(res.value)
+                    selectYear = res.value;
+                break;
+                case 1:
+                    selectMonth = res.value;
+                break;
+                case 2:
+                    selectDay = res.value;
+                break;
+            }
+        },
+        onChangeEnd: res => {
+            let _day = [], maxDay = new Date(selectYear, selectMonth, 0).getDate();
+            for (var i = 0; i <=maxDay; i++) {
+               _day.push({
+                   title: i,
+                   value: i
+               });
+            }
+            if (res.index === 0 || res.index === 1) {
+                $picker.setItem({
+                    index: 2,
+                    data: _day,
+                    default: selectDay < maxDay ? selectDay : maxDay
+                })
+            }
+        }
+    })
+
+    openPicker.onclick = function() {
+        console.log(dateList)
+        // $picker.data = dateList;
+        $picker.default = [2017, 1, 2];
+        $picker.open();
+        $picker.onConfirm = res =>  {
+            selectedYearS = res[0].value;
+            selectedMonthS = res[1].value;
+            selectedDayS = res[2].value;
+            // selectedTimeE = res[3].value;
+            console.log(selectedYearS, selectedMonthS, selectedDayS);
+        }
+    }
+    // console.log($picker.__proto__);
+})();
+</script>
+</html>

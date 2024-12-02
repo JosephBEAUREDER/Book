@@ -179,6 +179,7 @@ function updateInsightTitle(keyData) {
 
 
 
+
 ///////////// SCROLL-PICKER //////////////
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -194,10 +195,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const li = document.createElement("li");
       li.textContent = i;
       li.addEventListener("click", function () {
-          selectedValue = i; // Update the selected value
-          scrollPicker.setAttribute("data-selected", i); // Store the selected value
-          scrollPicker.classList.remove("expanded"); // Collapse the picker
-      });
+        selectedValue = i; // Update the selected value
+        scrollPicker.setAttribute("data-selected", i); // Store the selected value
+        console.log("Selected value:", li.textContent); // Log the content of the clicked <li>
+        scrollPicker.classList.remove("expanded"); // Collapse the picker
+        loadCardData(i);
+    });
       ul.appendChild(li);
   }
 
@@ -205,13 +208,16 @@ document.addEventListener("DOMContentLoaded", function () {
   scrollPicker.setAttribute("data-selected", selectedValue);
 
   // Expand the picker on click
-  scrollPicker.addEventListener("click", function () {
-      if (scrollPicker.classList.contains("expanded")) {
-          scrollPicker.classList.remove("expanded"); // Collapse if already expanded
-      } else {
-          scrollPicker.classList.add("expanded"); // Expand if not expanded
-      }
-  });
+  scrollPicker.addEventListener("click", function (event) {
+
+    if (scrollPicker.classList.contains("expanded")) {
+        console.log("Already expanded");
+        scrollPicker.classList.remove("expanded"); // Collapse if already expanded
+    } else {
+        console.log("Expanding picker");
+        scrollPicker.classList.add("expanded"); // Expand if not expanded
+    }
+});
 
   // Collapse the picker when clicking outside
   document.addEventListener("click", function (event) {
@@ -220,3 +226,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   });
 });
+

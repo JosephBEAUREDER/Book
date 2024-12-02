@@ -4,26 +4,6 @@ body {
     color: #f0f0f0; /* Light grey text for better readability */
 }
 
-/* Header with darker grey and shiny appearance */
-.header-container {
-    background-color: #3a3a3a; /* Dark grey background for header */
-    padding: 20px 15px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Stronger shadow for more depth */
-    color: #ffffff; /* White text */
-    border-bottom: 2px solid #474747; /* Subtle shine at the bottom */
-}
-
-/* Styling header text to make it stand out */
-.header h1 {
-    margin: 0;
-    font-size: auto; /* Slightly larger text for emphasis */
-    font-weight: bold;
-    text-transform: uppercase; /* Make the text uppercase for a modern feel */
-    letter-spacing: 1.5px; /* Increased letter spacing */
-    color: #c7c7c7; /* Lighter grey to provide a contrast with header background */
-}
-
 /* Card container adjustments */
 .card-container {
     position: relative; /* Establish stacking context for the cards */
@@ -45,7 +25,7 @@ body {
 
 /* Styling for card body */
 .card-body {
-    margin-top: 15px; /* Adjust vertical overlap */
+    margin-top: 10px; /* Adjust vertical overlap */
     padding: 15px; /* Add padding for spacing */
 }
 
@@ -113,16 +93,16 @@ body {
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow-y: hidden; /* Hide overflow by default */
+    overflow-y: auto; /* Hide overflow by default */
     transition: height 0.3s ease; /* Smooth transition when expanding */
     cursor: pointer;
     text-align: center;
     font-size: 1rem;
-    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #333;
+
 }
 
 /* Expanded scroll picker */
@@ -134,10 +114,12 @@ body {
 /* Options inside the picker */
 .scroll-picker ul {
     list-style: none;
-    padding: 0; /* Remove padding */
-    margin: 0; /* Remove margin */
-    width: 100%; /* Fit within the picker */
-    position: relative; /* Ensure list scrolls correctly */
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    position: relative;
+    overflow-y: auto;
+    height: 100%; /* Add this line */
 }
 
 .scroll-picker ul li {
@@ -146,18 +128,38 @@ body {
     cursor: pointer;
     border-bottom: 1px solid #f0f0f0;
     color: #333;
-    box-sizing: border-box; /* Ensure padding is included in height */
+    /* box-sizing: border-box;  */
 }
 
-.scroll-picker ul li:last-child {
-    border-bottom: none;
-}
 
 .scroll-picker ul li:hover {
     background: #f7f7f7;
     color: #000;
 }
 
-.parent-container {
-    overflow: visible !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
