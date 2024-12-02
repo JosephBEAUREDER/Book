@@ -4,10 +4,35 @@ body {
     color: #f0f0f0; /* Light grey text for better readability */
 }
 
+
+/* Styling for the big card container */
+.big-card {
+    width: 95%;
+    height: 90%;
+    margin: 0 auto; /* Center horizontally */
+    padding: 20px; /* Add inner spacing */
+    background-color: #303030; /* Dark grey for card background */
+    border: 1px solid #4a4a4a; /* Subtle border for card */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Shadow effect */
+    border-radius: 15px; /* Rounded corners */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    position: relative; /* Stay above other content */
+    z-index: 1; /* Ensure it's above the fixed-bottom */
+}
+
+/* Adjust spacing to fit above fixed-bottom */
+.container.mt-5 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100vh - 100px); /* Deduct fixed-bottom height */
+}
+
 /* Card container adjustments */
 .card-container {
     position: relative; /* Establish stacking context for the cards */
 }
+
 
 /* Individual card styling */
 .card {
@@ -17,7 +42,7 @@ body {
     top: 0;
     left: 0;
     width: 100%; /* Full width inside the container */
-    background-color: #3c3c3c; /* Dark grey for cards */
+    background-color: #383838; /* Dark grey for cards */
     border: 1px solid #4a4a4a; /* Slight shine on card edges */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Slight shadow for card */
     color: #f0f0f0; /* Light text for readability */
@@ -25,8 +50,8 @@ body {
 
 /* Styling for card body */
 .card-body {
-    margin-top: 10px; /* Adjust vertical overlap */
-    padding: 15px; /* Add padding for spacing */
+    margin-top: 5px; 
+    padding: 10px; /* Add padding for spacing */
 }
 
 /* Common styling for fixed bottom section */
@@ -40,14 +65,10 @@ body {
     padding: 0 20px;
 }
 
-/* Input styling */
-#key-input {
-    width: 70px; /* Fixed width for better alignment */
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+
+
+
+/* ----- BUTTON ------ */
 
 /* Adjust button styles to fit with the layout */
 #add-card-btn, #remove-card-btn {

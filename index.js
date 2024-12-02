@@ -146,21 +146,7 @@ function createCard(text) {
 
 
 
-const keyInput = document.getElementById("scroll-picker"); // Text input for user to specify key
-
-// Load a user-specified key when the Enter key is pressed
-keyInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") { // Check if the pressed key is "Enter"
-    const userKey = keyInput.value.trim();
-    if (jsonData[userKey]) {
-      currentKey = userKey;
-      currentKeyIndex = keys.indexOf(userKey); // Update the current key index to match the user-specified key
-      loadCardData(currentKey); // Load cards for the specified key
-    } else {
-      alert("Invalid key! Please enter a valid key.");
-    }
-  }
-});
+// const keyInput = document.getElementById("scroll-picker"); // Text input for user to specify key
 
 // Function to update the JSON key display
 function updateInsightTitle(keyData) {
