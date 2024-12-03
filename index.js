@@ -44,7 +44,13 @@ function loadCardData(key) {
 
 
 // Fetch JSON and prepare card data
-fetch("insights.json")
+// Fetch JSON dynamically and prepare card data
+fetch("config.json")
+  .then((response) => response.json())
+  .then((config) => {
+    const latestFile = config.latest_file; // Get the latest JSON file path
+    return fetch(latestFile); // Fetch the actual insights file
+  })
   .then((response) => response.json())
   .then((data) => {
     jsonData = data; // Store the entire JSON object
