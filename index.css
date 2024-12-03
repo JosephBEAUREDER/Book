@@ -32,53 +32,27 @@ body {
     gap: 20px; /* Add spacing between cards if needed */
 }
 
+
+.card-container {
+    position: relative; /* Establish stacking context */
+}
+
 .small-card {
     background-color: #4a4a4a;
     color: #fff;
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
+    border: #000000 solid 0.2px;
+    border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 100%; /* Adjust card width */
+    position: absolute; /* Position each card relative to the container */
+    top: 0; /* Default to the top of the container */
+    margin: 0; /* Remove default margin */
+    transform: translateY(calc(18px * var(--index))); /* Stack with a 10px gap */
+    z-index: var(--index); /* Ensure newer cards appear above */
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* Card container adjustments */
-.card-container {
-    position: relative; /* Establish stacking context for the cards */
-}
-
-
-/* Individual card styling */
-.card {
-    margin-top: 0; /* Prevent automatic spacing */
-    z-index: auto; /* Cards will stack based on their DOM order */
-    position: absolute; /* Allow cards to overlap */
-    top: 0;
-    left: 0;
-    width: 100%; /* Full width inside the container */
-    background-color: #383838; /* Dark grey for cards */
-    border: 1px solid #4a4a4a; /* Slight shine on card edges */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Slight shadow for card */
-    color: #f0f0f0; /* Light text for readability */
-}
-
-/* Styling for card body */
-.card-body {
-    margin-top: 5px; 
-    padding: 10px; /* Add padding for spacing */
-}
 
 /* Common styling for fixed bottom section */
 .fixed-bottom {
@@ -86,10 +60,15 @@ body {
     bottom: 10px;
     width: 100%;
     display: flex;
+    border-top: #000000 solid 0.5px;
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Align items vertically */
     padding: 0 20px;
 }
+
+
+
+
 
 
 

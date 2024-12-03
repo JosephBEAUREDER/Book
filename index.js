@@ -67,29 +67,33 @@ function loadBigCards(jsonData) {
   });
 }
 
-function logVisibleCardKey() {
+let visibleKey = getVisibleCardKey();
+
+// Function to get the key of the visible big card
+function getVisibleCardKey() {
   const bigCards = document.querySelectorAll(".big-card");
 
   // Create an IntersectionObserver
   const observer = new IntersectionObserver(
-      (entries) => {
-          entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                  // Log the key when a big card is visible
-                  const visibleCardTitle = entry.target.querySelector("h3").textContent;
-                  const key = visibleCardTitle.split(".")[0]; // Extract the key from the title
-                  console.log(`Visible Card Key: ${key}`);
-              }
-          });
-      },
-      {
-          root: document.querySelector(".container.mt-5"), // Scrollable container
-          threshold: 0.5, // Trigger when 50% of the card is visible
-      }
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const visibleCardTitle = entry.target.querySelector("h3").textContent;
+          visibleKey = visibleCardTitle.split(".")[0]; // Extract the key from the title
+          console.log("Visible Card Key: ", visibleKey);
+        }
+      });
+    },
+    {
+      root: document.querySelector(".container.mt-5"), // Scrollable container
+      threshold: 0.5, // Trigger when 50% of the card is visible
+    }
   );
 
   // Observe each big card
   bigCards.forEach((card) => observer.observe(card));
+
+  return visibleKey;
 }
 
 // Fetch JSON dynamically and prepare card data
@@ -107,114 +111,75 @@ fetch("config.json")
     loadBigCards(jsonData);
 
     // Attach the observer to log the visible card key
-    logVisibleCardKey();
+    getVisibleCardKey();
   })
   .catch((error) => console.error("Error loading JSON:", error));
 
 
 
-  // Add a card dynamically when the "+" button is clicked
+// Add a card dynamically when the "+" button is clicked
 addCardBtn.addEventListener("click", () => {
-  if (removedCards.length > 0) {
-    // Reuse a removed card if available
-    const text = removedCards.pop();
-    createCard(text);
-  } else if (cardData.length > 0) {
-    // Otherwise, use the next card from the remaining data
-    const text = cardData.shift();
-    createCard(text);
+  const visibleKey = getVisibleCardKey(); // Get the key of the visible card
+  if (!visibleKey) {
+    console.error("No visible card found");
+    return;
+  }
+
+  // Get the content for the key
+  const cardData = jsonData[visibleKey];
+  const contentItems = cardData["Content"];
+
+  // Get the corresponding big card
+  const bigCard = document.querySelector(`.big-card:nth-child(${visibleKey})`);
+  const cardContainer = bigCard.querySelector(".card-container");
+
+  // Determine the number of existing small cards
+  const existingCards = cardContainer.querySelectorAll(".small-card").length;
+
+  // Add the next small card if available
+  if (existingCards < contentItems.length) {
+    const nextContent = contentItems[existingCards]; // Get the next content item
+
+    // Create a small card
+    const smallCard = document.createElement("div");
+    smallCard.classList.add("small-card");
+    smallCard.textContent = nextContent;
+
+    // Set the stacking order based on the index
+    smallCard.style.setProperty("--index", existingCards); // Add this line
+
+    // Append the small card to the card container
+    cardContainer.appendChild(smallCard);
   } else {
-    // Move to the next key when no more cards in the current key
-    currentKeyIndex++;
-    if (currentKeyIndex < keys.length) {
-      const nextKey = keys[currentKeyIndex];
-      loadCardData(nextKey);
-    } else {
-      alert("No more cards to display!");
-      resetCards(); // Ensure cards are cleared when everything is done
-    }
+    console.log("No more content to add for this key.");
   }
 });
 
 
 
-// Remove the last card when the "-" button is clicked
+
 removeCardBtn.addEventListener("click", () => {
-  const cards = cardContainer.getElementsByClassName("card");
-  
-  if (cards.length > 0) {
-    // Remove the last card if there are cards in the container
-    const lastCard = cards[cards.length - 1]; // Get the last card
-    const text = lastCard.textContent; // Get the text content only
+  const visibleKey = getVisibleCardKey(); // Get the key of the visible card
+  if (!visibleKey) {
+    console.error("No visible card found");
+    return;
+  }
 
-    removedCards.push(text); // Save the removed card's text
-    lastCard.remove(); // Remove the last card
-    cardCount--; // Decrement the card count
+  // Get the corresponding big card
+  const bigCard = document.querySelector(`.big-card:nth-child(${visibleKey})`);
+  const cardContainer = bigCard.querySelector(".card-container");
 
-    if (cardCount === 0 && currentKeyIndex > 0) {
-      // No cards left, move to the previous key if available
-      currentKeyIndex--; // Decrement the current key index
-      const previousKey = keys[currentKeyIndex]; // Get the previous key
-      loadCardData(previousKey); // Load cards for the previous key
-    }
+  // Get all existing small cards in the container
+  const existingCards = cardContainer.querySelectorAll(".small-card");
+
+  // Remove the last small card if available
+  if (existingCards.length > 1) {
+    const lastCard = existingCards[existingCards.length - 1]; // Get the last small card
+    cardContainer.removeChild(lastCard); // Remove the last card
   } else {
-    alert("No cards to remove!");
+    console.log("No small cards to remove for this key.");
   }
 });
-
-
-
-
-
-
-// Reset all cards
-function resetCards() {
-  while (cardContainer.firstChild) {
-    cardContainer.removeChild(cardContainer.firstChild);
-  }
-  cardCount = 0;
-  removedCards = [];
-}
-
-// Load the first key initially
-if (keys.length > 0) {
-  loadCardData(keys[currentKeyIndex]);
-}
-
-
-
-// Function to create and add a card to the container
-function createCard(text) {
-  const newCard = document.createElement("div");
-  newCard.className = "card";
-  newCard.style.zIndex = cardCount; // Ensure stacking order
-  newCard.style.top = `${cardCount * 20}px`; // Adjust position for bigger overlap
-  newCard.innerHTML = `
-    <div class="card-body">
-      <p class="card-text">${text}</p>
-    </div>
-  `;
-
-  cardContainer.appendChild(newCard); // Add the card to the container
-  cardCount++; // Increment card count for stacking
-}
-
-
-
-// const keyInput = document.getElementById("scroll-picker"); // Text input for user to specify key
-
-// Function to update the JSON key display
-function updateInsightTitle(keyData) {
-  const InsightTitle = document.getElementById("json-key-display");
-  const titleAndAuthor = keyData["Title and author"];
-  InsightTitle.textContent = titleAndAuthor;
-}
-
-// function updateInputSection(key) {
-//   const keyInput = document.getElementById("scroll-picker");
-//   keyInput.placeholder = key; // Set the placeholder to the Title and Author
-// }
-
 
 
 
