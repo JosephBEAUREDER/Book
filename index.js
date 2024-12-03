@@ -67,9 +67,9 @@ function loadBigCards(jsonData) {
   });
 }
 
-let visibleKey = getVisibleCardKey();
+let visibleKey = null; // Declare visibleKey at a higher scope
 
-// Function to get the key of the visible big card
+// Function to get and update the key of the visible big card
 function getVisibleCardKey() {
   const bigCards = document.querySelectorAll(".big-card");
 
@@ -79,8 +79,8 @@ function getVisibleCardKey() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const visibleCardTitle = entry.target.querySelector("h3").textContent;
-          visibleKey = visibleCardTitle.split(".")[0]; // Extract the key from the title
-          console.log("Visible Card Key: ", visibleKey);
+          visibleKey = visibleCardTitle.split(".")[0]; // Update the global visibleKey
+          console.log("Visible Card Key: ", visibleKey); // Log for debugging
         }
       });
     },
@@ -92,9 +92,10 @@ function getVisibleCardKey() {
 
   // Observe each big card
   bigCards.forEach((card) => observer.observe(card));
-
-  return visibleKey;
 }
+
+// Call this function once to start observing
+getVisibleCardKey();
 
 // Fetch JSON dynamically and prepare card data
 fetch("config.json")
@@ -119,7 +120,6 @@ fetch("config.json")
 
 // Add a card dynamically when the "+" button is clicked
 addCardBtn.addEventListener("click", () => {
-  const visibleKey = getVisibleCardKey(); // Get the key of the visible card
   if (!visibleKey) {
     console.error("No visible card found");
     return;
@@ -146,7 +146,7 @@ addCardBtn.addEventListener("click", () => {
     smallCard.textContent = nextContent;
 
     // Set the stacking order based on the index
-    smallCard.style.setProperty("--index", existingCards); // Add this line
+    smallCard.style.setProperty("--index", existingCards);
 
     // Append the small card to the card container
     cardContainer.appendChild(smallCard);
@@ -157,9 +157,7 @@ addCardBtn.addEventListener("click", () => {
 
 
 
-
 removeCardBtn.addEventListener("click", () => {
-  const visibleKey = getVisibleCardKey(); // Get the key of the visible card
   if (!visibleKey) {
     console.error("No visible card found");
     return;
@@ -167,6 +165,11 @@ removeCardBtn.addEventListener("click", () => {
 
   // Get the corresponding big card
   const bigCard = document.querySelector(`.big-card:nth-child(${visibleKey})`);
+  if (!bigCard) {
+    console.error("No big card found for the visible key:", visibleKey);
+    return;
+  }
+
   const cardContainer = bigCard.querySelector(".card-container");
 
   // Get all existing small cards in the container
