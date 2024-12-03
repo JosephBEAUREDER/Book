@@ -13,37 +13,85 @@ let currentKeyIndex = 0; // Track the current key index
 let keys = []; // Keys of the JSON data
 
 
-// Function to create a card
-function createCard(text) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.textContent = text;
-  cardContainer.appendChild(card);
-  cardCount++;
-}
 
-// Function to load data for a specific key
-function loadCardData(key) {
-  if (jsonData[key]) {
-    const keyData = jsonData[key];
-    console.log(key);
-    const content = keyData["Content"];
-    cardData = [...content]; // Copy the content into cardData
-    resetCards(); // Reset the card display
-    if (cardData.length > 0) {
-      const text = cardData.shift();
-      createCard(text);
+
+
+// Function to dynamically load big cards into the container
+function loadBigCards(jsonData) {
+  const container = document.querySelector(".container.mt-5"); // The main container
+
+  // Clear the container before adding new big cards
+  container.innerHTML = "";
+
+  // Loop through each key in the JSON
+  Object.keys(jsonData).forEach((key) => {
+      const cardData = jsonData[key];
+
+      // Create a new big card div
+      const bigCard = document.createElement("div");
+      bigCard.classList.add("big-card");
+
+      // Add the key as the card title
+      const title = document.createElement("h3");
+      title.textContent = `${key}. ${cardData["Title and author"]}`;
+      title.classList.add("mb-3");
+
+      // Create a container for the content (for now, only the first item)
+      const contentContainer = document.createElement("div");
+      contentContainer.classList.add("card-container");
+
+    // Create the first small card for the first item in the content
+    if (cardData["Content"] && cardData["Content"].length > 0) {
+      const firstItem = cardData["Content"][0]; // Get the first content item
+
+      // Create a small card
+      const smallCard = document.createElement("div");
+      smallCard.classList.add("small-card"); // Add a class for styling
+      smallCard.textContent = firstItem; // Add the content text
+
+      // Append the small card to the content container
+      contentContainer.appendChild(smallCard);
+    } else {
+      // Fallback if no content is available
+      const noContent = document.createElement("p");
+      noContent.textContent = "No content available";
+      contentContainer.appendChild(noContent);
     }
-    updateInsightTitle(keyData); // Pass the key object to update the display
-    // updateInputSection(key); // Pass the key object to update the input field
-  } else {
-    alert("No more sections to display!");
-  }
+
+      // Append the title and content container to the big card
+      bigCard.appendChild(title);
+      bigCard.appendChild(contentContainer);
+
+      // Append the big card to the main container
+      container.appendChild(bigCard);
+  });
 }
 
+function logVisibleCardKey() {
+  const bigCards = document.querySelectorAll(".big-card");
 
+  // Create an IntersectionObserver
+  const observer = new IntersectionObserver(
+      (entries) => {
+          entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                  // Log the key when a big card is visible
+                  const visibleCardTitle = entry.target.querySelector("h3").textContent;
+                  const key = visibleCardTitle.split(".")[0]; // Extract the key from the title
+                  console.log(`Visible Card Key: ${key}`);
+              }
+          });
+      },
+      {
+          root: document.querySelector(".container.mt-5"), // Scrollable container
+          threshold: 0.5, // Trigger when 50% of the card is visible
+      }
+  );
 
-// Fetch JSON and prepare card data
+  // Observe each big card
+  bigCards.forEach((card) => observer.observe(card));
+}
+
 // Fetch JSON dynamically and prepare card data
 fetch("config.json")
   .then((response) => response.json())
@@ -55,14 +103,11 @@ fetch("config.json")
   .then((data) => {
     jsonData = data; // Store the entire JSON object
 
-    // Get the keys sorted to ensure consistent order
-    keys = Object.keys(jsonData).sort((a, b) => parseInt(a) - parseInt(b));
-    currentKeyIndex = 0; // Track the current key index
+    // Dynamically load big cards into the container
+    loadBigCards(jsonData);
 
-    // Load the first key initially
-    if (keys.length > 0) {
-      loadCardData(keys[currentKeyIndex]);
-    }
+    // Attach the observer to log the visible card key
+    logVisibleCardKey();
   })
   .catch((error) => console.error("Error loading JSON:", error));
 
@@ -116,6 +161,10 @@ removeCardBtn.addEventListener("click", () => {
     alert("No cards to remove!");
   }
 });
+
+
+
+
 
 
 // Reset all cards

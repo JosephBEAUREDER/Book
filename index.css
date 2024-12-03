@@ -8,8 +8,8 @@ body {
 /* Styling for the big card container */
 .big-card {
     width: 95%;
-    height: 90%;
-    margin: 0 auto; /* Center horizontally */
+    height: 100%; /* Fill the container height */
+    margin: 20px auto; /* Center horizontally and add vertical spacing */
     padding: 20px; /* Add inner spacing */
     background-color: #303030; /* Dark grey for card background */
     border: 1px solid #4a4a4a; /* Subtle border for card */
@@ -18,15 +18,41 @@ body {
     overflow-y: auto; /* Enable scrolling if content overflows */
     position: relative; /* Stay above other content */
     z-index: 1; /* Ensure it's above the fixed-bottom */
+    flex-shrink: 0; /* Prevent shrinking to fit container */
 }
 
 /* Adjust spacing to fit above fixed-bottom */
 .container.mt-5 {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: calc(100vh - 100px); /* Deduct fixed-bottom height */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: flex-start; /* Align children at the top */
+    align-items: center; /* Center children horizontally */
+    height: calc(100vh - 150px); /* Deduct fixed-bottom height */
+    overflow-y: auto; /* Enable scrolling for the container */
+    gap: 20px; /* Add spacing between cards if needed */
 }
+
+.small-card {
+    background-color: #4a4a4a;
+    color: #fff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Card container adjustments */
 .card-container {
