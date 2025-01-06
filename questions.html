@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+    margin: 0;
+    padding: 0;
+    background-color: #2b2b2b;
+    width: 100vw;
+    }
+
+    .moving-block {
+    background-color: #949494;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    position: absolute;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 300px; /* Added max-width */
+    width: 80%; /* Added width to make it responsive */
+    box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    @media (max-width: 600px) {
+        .moving-block {
+            font-size: 15px;
+            max-width: 250px; /* Smaller max-width for mobile */
+        }
+    }   
+  </style>
+</head>
+<body>
+  <script>
+    const BLOCKS_PER_SECTION = 3;
+    const TOTAL_BLOCKS = 30;
+    const SECTIONS = Math.ceil(TOTAL_BLOCKS / BLOCKS_PER_SECTION);
+    
+    document.body.style.height = `${SECTIONS * 100}vh`;
+
+    function createMovingBlock(text, sectionIndex) {
+      const block = document.createElement('div');
+      block.className = 'moving-block';
+      block.textContent = text;
+      document.body.appendChild(block);
+
+      const sectionTop = window.innerHeight * sectionIndex;
+      const sectionBottom = window.innerHeight * (sectionIndex + 1);
+
+      let x = Math.random() * (window.innerWidth - 300); // Adjusted for new max-width
+      let y = sectionTop + Math.random() * (window.innerHeight - 80);
+      
+      let dx = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
+      let dy = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
+
+      function animate() {
+        x += dx;
+        y += dy;
+
+        if (x <= 0 || x >= window.innerWidth - 250) { // Adjusted for new max-width
+          dx = -dx;
+          x = Math.max(0, Math.min(x, window.innerWidth - 250));
+        }
+
+        if (y <= sectionTop || y >= sectionBottom - 80) {
+          dy = -dy;
+          y = Math.max(sectionTop, Math.min(y, sectionBottom - 80));
+        }
+
+        block.style.left = `${x}px`;
+        block.style.top = `${y}px`;
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    const texts = [
+      "What is social stratification?",
+      "How do social norms affect behavior?",
+      "What is the role of culture in society?",
+      "What are the main theories of socialization?",
+      "How does inequality manifest in modern societies?",
+      "What is the impact of globalization on local cultures?",
+      "What defines a social institution?",
+      "How do social movements bring about change?",
+      "What is the relationship between power and politics?",
+      "How do media shape public opinion?",
+      "What are the causes and effects of poverty?",
+      "What is the role of education in social mobility?",
+      "How do gender roles influence society?",
+      "What is the impact of religion on social norms?",
+      "What are the effects of urbanization?",
+      "How does race and ethnicity impact social identity?",
+      "What is the sociology of work?",
+      "How do families contribute to social reproduction?",
+      "What are the theories of deviance?",
+      "How does crime relate to social structures?",
+      "What is the role of the state in regulating behavior?",
+      "How do economic systems affect social inequality?",
+      "What are the social consequences of environmental change?",
+      "How do social policies affect welfare?",
+      "What is the sociology of health and illness?",
+      "How do social networks influence individual behavior?",
+      "What is the role of collective action in society?",
+      "How do class and status impact life opportunities?",
+    ];
+
+    for (let i = 0; i < TOTAL_BLOCKS; i++) {
+      const sectionIndex = Math.floor(i / BLOCKS_PER_SECTION);
+      createMovingBlock(texts[i], sectionIndex);
+    }
+  </script>
+</body>
+</html>
