@@ -23,6 +23,7 @@
     max-width: 300px; /* Added max-width */
     width: 80%; /* Added width to make it responsive */
     box-sizing: border-box; /* Include padding in width calculation */
+    cursor:pointer; 
     }
 
     @media (max-width: 600px) {
@@ -46,6 +47,21 @@
       block.className = 'moving-block';
       block.textContent = text;
       document.body.appendChild(block);
+
+      // Add click event listener to the block
+      block.addEventListener('click', () => {
+        // Copy the block's text to the clipboard
+        navigator.clipboard.writeText(block.textContent)
+          .then(() => {
+            // Open the new tab after copying
+            const url = `https://notebooklm.google.com/notebook/3d5fd0b2-43a8-44a6-b5d6-047f56266167`;
+            const newTab = window.open(url, '_blank');
+            newTab.focus();
+          })
+          .catch(err => {
+            console.error('Failed to copy text: ', err);
+          });
+        });
 
       const sectionTop = window.innerHeight * sectionIndex;
       const sectionBottom = window.innerHeight * (sectionIndex + 1);
