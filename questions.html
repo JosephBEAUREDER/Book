@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questions</title>
   <style>
     body {
     margin: 0;
@@ -36,99 +37,108 @@
 </head>
 <body>
   <script>
-    const BLOCKS_PER_SECTION = 3;
-    const TOTAL_BLOCKS = 30;
-    const SECTIONS = Math.ceil(TOTAL_BLOCKS / BLOCKS_PER_SECTION);
+    async function initializeBlocks() {
+      try {
+        // Fetch and load the data
+        const response = await fetch('Questions.json');
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const texts = await response.json();
+        console.log('Loaded texts:', texts);
     
-    document.body.style.height = `${SECTIONS * 100}vh`;
-
-    function createMovingBlock(text, sectionIndex) {
-      const block = document.createElement('div');
-      block.className = 'moving-block';
-      block.textContent = text;
-      document.body.appendChild(block);
-
-      // Add click event listener to the block
-      block.addEventListener('click', () => {
-        // Copy the block's text to the clipboard
-        navigator.clipboard.writeText(block.textContent)
-          .then(() => {
-            // Open the new tab after copying
-            const url = `https://notebooklm.google.com/notebook/3d5fd0b2-43a8-44a6-b5d6-047f56266167`;
-            const newTab = window.open(url, '_blank');
-            newTab.focus();
-          })
-          .catch(err => {
-            console.error('Failed to copy text: ', err);
+        // Constants for layout
+        const BLOCKS_PER_SECTION = 3;
+        const TOTAL_BLOCKS = texts.length;
+        const SECTIONS = Math.ceil(TOTAL_BLOCKS / BLOCKS_PER_SECTION);
+    
+        // Set document height
+        document.body.style.height = `${SECTIONS * 100}vh`;
+    
+        // Function to create and animate blocks
+        function createMovingBlock(text, sectionIndex) {
+          const block = document.createElement('div');
+          block.className = 'moving-block';
+          block.textContent = text;
+          document.body.appendChild(block);
+    
+          // Add click event listener to the block
+          block.addEventListener('click', () => {
+            // Copy the block's text to the clipboard
+            navigator.clipboard.writeText(block.textContent)
+              .then(() => {
+                // Open the new tab after copying
+                const url = `https://notebooklm.google.com/notebook/3d5fd0b2-43a8-44a6-b5d6-047f56266167`;
+                const newTab = window.open(url, '_blank');
+                newTab.focus();
+              })
+              .catch(err => {
+                console.error('Failed to copy text: ', err);
+              });
           });
-        });
-
-      const sectionTop = window.innerHeight * sectionIndex;
-      const sectionBottom = window.innerHeight * (sectionIndex + 1);
-
-      let x = Math.random() * (window.innerWidth - 300); // Adjusted for new max-width
-      let y = sectionTop + Math.random() * (window.innerHeight - 80);
-      
-      let dx = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
-      let dy = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
-
-      function animate() {
-        x += dx;
-        y += dy;
-
-        if (x <= 0 || x >= window.innerWidth - 250) { // Adjusted for new max-width
-          dx = -dx;
-          x = Math.max(0, Math.min(x, window.innerWidth - 250));
+    
+          // Calculate section boundaries
+          const sectionTop = window.innerHeight * sectionIndex;
+          const sectionBottom = window.innerHeight * (sectionIndex + 1);
+    
+          // Initial position
+          let x = Math.random() * (window.innerWidth - 300); // Adjusted for max-width
+          let y = sectionTop + Math.random() * (window.innerHeight - 80);
+    
+          // Initial velocity
+          let dx = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
+          let dy = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.3 + 0.1);
+    
+          // Animation function
+          function animate() {
+            // Update position
+            x += dx;
+            y += dy;
+    
+            // Boundary checking for x-axis
+            if (x <= 0 || x >= window.innerWidth - 250) {
+              dx = -dx;
+              x = Math.max(0, Math.min(x, window.innerWidth - 250));
+            }
+    
+            // Boundary checking for y-axis
+            if (y <= sectionTop || y >= sectionBottom - 80) {
+              dy = -dy;
+              y = Math.max(sectionTop, Math.min(y, sectionBottom - 80));
+            }
+    
+            // Apply new position
+            block.style.left = `${x}px`;
+            block.style.top = `${y}px`;
+    
+            // Continue animation
+            requestAnimationFrame(animate);
+          }
+    
+          // Start animation
+          animate();
         }
-
-        if (y <= sectionTop || y >= sectionBottom - 80) {
-          dy = -dy;
-          y = Math.max(sectionTop, Math.min(y, sectionBottom - 80));
+    
+        // Shuffle the texts array
+        const shuffledTexts = texts.slice();
+        for (let i = shuffledTexts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledTexts[i], shuffledTexts[j]] = [shuffledTexts[j], shuffledTexts[i]];
         }
-
-        block.style.left = `${x}px`;
-        block.style.top = `${y}px`;
-
-        requestAnimationFrame(animate);
+    
+        // Create blocks in random order
+        for (let i = 0; i < TOTAL_BLOCKS; i++) {
+          const sectionIndex = Math.floor(i / BLOCKS_PER_SECTION);
+          createMovingBlock(shuffledTexts[i], sectionIndex);
+        }
+    
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
       }
-
-      animate();
     }
-
-    const texts = [
-      "Quelle est l'importance de la méthode comparative dans l'approche historique de Bloch, et comment est-elle perçue par ses contemporains ?",
-      "Quels sont les principaux points de divergence entre Marc Bloch et Lucien Febvre dans leur approche de l’histoire sociale, notamment concernant l'individu et les mentalités ?",
-      "Comment Febvre critique-t-il la conception de l’histoire défendue par Seignobos, et en quoi cette opposition illustre-t-elle les fondements identitaires des Annales ?",
-      "Comment Michelet conçoit-il l'identité de la France à travers la fusion des races et la géographie historique ?",
-      "Quelles sont les principales interprétations de la Révolution française chez les auteurs contre-révolutionnaires et libéraux, et en quoi s'opposent-elles ?",
-      "En quoi les découvertes archéologiques et scientifiques du XIXe siècle ont-elles contribué à une rénovation de l’historiographie, notamment avec l’étude de la préhistoire ?",
-      "Comment Louis Althusser a-t-il intégré Marx et le structuralisme dans l'enseignement de l'École normale supérieure d'Ulm dans les années 1960 ?",
-      "En quoi la méthode de Georges Duby diffère-t-elle du schéma simpliste d'une causalité entre infrastructure et superstructure ?",
-      "Comment Guy Bois articule-t-il les niveaux d'analyse dans son étude de la crise du féodalisme au XIVe siècle ?",
-      "Quelles sont les divergences entre Pierre Vilar et Louis Althusser concernant l'interprétation de la pensée de Marx ?",
-      "Comment l'intérêt pour l'altérité et la relativisation de l'européocentrisme ont-ils influencé les discours anthropologiques et historiques en Occident ?",
-      "Comment le discours historique des années 1970 a-t-il reflété les changements sociétaux après Mai 68 ?",
-      "Comment la collaboration entre historiens et autres sciences sociales a-t-elle influencé l’approche structuraliste dans les années 1970 ?",
-      "Comment l’accent mis sur le structuralisme a-t-il transformé la manière dont les historiens abordent le temps et les événements ?",
-      "Comment Michel Foucault et Pierre Nora ont-ils contribué au passage d’une Histoire unifiée à des histoires multiples ?",
-      "Comment la notion de 'mentalités' a-t-elle redéfini l'approche des historiens dans les années 1970 ?",
-      "Quelles ont été les principales contributions de Philippe Ariès à l'histoire des mentalités ?",
-      "Comment Georges Duby et les historiens de l'école des Annales ont-ils structuré le champ des mentalités ?",
-      "How does crime relate to social structures?",
-      "What is the role of the state in regulating behavior?",
-      "How do economic systems affect social inequality?",
-      "What are the social consequences of environmental change?",
-      "How do social policies affect welfare?",
-      "What is the sociology of health and illness?",
-      "How do social networks influence individual behavior?",
-      "What is the role of collective action in society?",
-      "How do class and status impact life opportunities?",
-    ];
-
-    for (let i = 0; i < TOTAL_BLOCKS; i++) {
-      const sectionIndex = Math.floor(i / BLOCKS_PER_SECTION);
-      createMovingBlock(texts[i], sectionIndex);
-    }
+    
+    // Start the initialization
+    initializeBlocks();
   </script>
 </body>
 </html>
