@@ -18,7 +18,7 @@ let keys = []; // Keys of the JSON data
 
 // Function to dynamically load big cards into the container
 function loadBigCards(jsonData) {
-  const container = document.querySelector(".container.mt-5"); // The main container
+  const container = document.querySelector(".main-container"); // The main container
 
   // Clear the container before adding new big cards
   container.innerHTML = "";
@@ -85,7 +85,7 @@ function getVisibleCardKey() {
       });
     },
     {
-      root: document.querySelector(".container.mt-5"), // Scrollable container
+      root: document.querySelector(".main-container"), // Scrollable container
       threshold: 0.5, // Trigger when 50% of the card is visible
     }
   );
